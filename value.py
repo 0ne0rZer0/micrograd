@@ -1,3 +1,4 @@
+import math
 class Value():
 
     # Constructor
@@ -20,4 +21,10 @@ class Value():
         out = Value(self.data * other.data, (self, other), '*')
         self.grad = other.data
         other.grad = self.data
+        return out
+    
+    def tanh(self):
+        x = self.data
+        t = math.exp(2*x-1) / math.exp(2*x+1)
+        out = Value(t, (self, ), 'tanh')
         return out
