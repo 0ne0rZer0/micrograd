@@ -1,8 +1,9 @@
 from value import Value
 import random
+
+
 # A neuron is a collection of math expression
 # Here it is a summation of wi*xi i ranges to a given input nin, + activation bias b
-
 class Neuron:
     def __init__(self, nin):
         self.w = [Value(random.uniform(-1,1)) for _ in range(nin)]
@@ -19,3 +20,36 @@ class Neuron:
         # activation fucntion
         out = value.tanh()
         return out
+    
+
+# A Layer is a collection of neurons, with a fixed set of input values and output values
+# nin is the value passed to individual neuron, nout is the number of neurons that will be created
+# calling a layer is summing up all the calls of neuron in a layer
+class Layer:
+    def __init__(self, nin:int, nout:int):
+        self.neurons = [Neuron(nin) for _ in range(nout)]
+
+    def __call__(self, x):
+        outs = [n(x) for n in self.neurons]
+        # The final layer would only have 1 neuron so return type needs to be malleable
+        return outs[0] if len(outs) == 1 else outs
+    
+
+# A Multi layer perceptron (or an MLP for short) is (as you guessed) a multi layer encapsulation
+# it takes in how many inputs (size of x) and then outputs per layer (neurons per layer)
+class MLP:
+    def __init__(self, nin:int, nouts:list):
+        # array of 1 plus array of n
+        sizes = [nin] + nouts
+        # Each layer needs to connect to the next layer where 0 is nin and the input layer
+        # iterating makes output the input iterating from 0 to n-1
+        self.layers = [Layer(sizes[i], sizes[i+1]) for i in range(len(nouts))]
+
+    def __call__(self, x:list):
+        for layer in self.layers:
+            # You pass the input to first layer which produces an output
+            # which becomes an input to the second layer and so on
+            x = layer(x)
+        # you return the final input
+        return x
+    
