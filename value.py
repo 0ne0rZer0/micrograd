@@ -57,7 +57,7 @@ class Value():
         return self * -1
     
     def __sub__(self, other):
-        return self.data + (-other)
+        return self + (-other)
     
     def exp(self):
         x = self.data
