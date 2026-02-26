@@ -21,6 +21,9 @@ class Neuron:
         out = value.tanh()
         return out
     
+    def parameters(self):
+        return self.w + [self.b]
+    
 
 # A Layer is a collection of neurons, with a fixed set of input values and output values
 # nin is the value passed to individual neuron, nout is the number of neurons that will be created
@@ -34,6 +37,9 @@ class Layer:
         # The final layer would only have 1 neuron so return type needs to be malleable
         return outs[0] if len(outs) == 1 else outs
     
+    def parameters(self):
+        return [p for neuron in self.neurons for p in neuron.parameters()]  
+
 
 # A Multi layer perceptron (or an MLP for short) is (as you guessed) a multi layer encapsulation
 # it takes in how many inputs (size of x) and then outputs per layer (neurons per layer)
@@ -53,3 +59,5 @@ class MLP:
         # you return the final input
         return x
     
+    def parameters(self):
+        return [p for layer in self.layers for p in layer.parameters()]
